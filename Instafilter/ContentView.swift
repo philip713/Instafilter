@@ -29,7 +29,8 @@ struct ContentView: View {
         }
         .onAppear(perform: loadImage)
         .padding()
-        
+    
+        //fuck github
     }
     func loadImage() {
         let inputImage = UIImage(resource: .example)
