@@ -8,29 +8,28 @@
 import SwiftUI
 import CoreImage
 import CoreImage.CIFilterBuiltins
+import PhotosUI
+import SwiftUI
 
 struct ContentView: View {
     @State private var image: Image?
+    @State private var pickerItem: PhotosPickerItem?
+    @State private var pickerItems = [PhotosPickerItem]()
+    @State private var selectedImage: Image?
     var body: some View {
         VStack {
-            image?
+            PhotosPicker("Select a picture", selection: $pickerItem, matching: .images)
+            selectedImage?
                 .resizable()
                 .scaledToFit()
-            ContentUnavailableView{
-                Label("No snippets", systemImage: "swift")
-            } description: {
-                Text("You dont have any saved snippets yet.")
-            } actions: {
-                Button("Create Snippet"){
-                    
-                }
-                .buttonStyle(.borderedProminent)
+        }
+//        .onAppear(perform: loadImage)
+        .onChange(of: pickerItem){
+            Task {
+                selectedImage = try await pickerItem?.loadTransferable(type: Image.self)
             }
         }
-        .onAppear(perform: loadImage)
         .padding()
-    
-        //fuck github it sucks so bad
     }
     func loadImage() {
         let inputImage = UIImage(resource: .example)
